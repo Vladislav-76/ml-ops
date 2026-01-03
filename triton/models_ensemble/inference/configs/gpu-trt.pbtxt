@@ -1,0 +1,28 @@
+name: "inference"
+backend: "tensorrt"
+default_model_filename: "model.engine"
+max_batch_size: 16
+dynamic_batching {
+  preferred_batch_size: [4]
+}
+
+input [
+  {
+    name: "pixel_values",
+    data_type: TYPE_FP32,
+    dims: [ -1, -1, -1 ]
+  }
+],
+output [
+  {
+    name: "logits",
+    data_type: TYPE_FP32,
+    dims: [ 1000 ]
+  }
+]
+
+version_policy: { specific { versions: [2] }}
+instance_group {
+    count: 1
+    kind: KIND_GPU
+}

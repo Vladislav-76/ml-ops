@@ -1,0 +1,9 @@
+name: conda_pre_post
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12.3
+  - pip=24.0
+  - pip:
+      - transformers==4.57.1
+      - datasets==4.4.1

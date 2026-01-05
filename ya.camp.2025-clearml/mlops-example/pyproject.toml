@@ -19,3 +19,4 @@ mlops_example = { path = ".", editable = true }
 
 [tool.pixi.dependencies]
 python = "3.11.*"
+pip = "*"

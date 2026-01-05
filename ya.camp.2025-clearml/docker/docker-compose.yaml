@@ -233,6 +233,36 @@ services:
     volumes:
       - ./clearml_config:/root/.clearml
 
+  serving-triton:
+    hostname: tritonserving
+    container_name: clearml-serving-triton
+    image: allegroai/clearml-serving-triton:1.3.1
+    restart: unless-stopped
+    networks:
+      - bagel
+      - frontend
+    depends_on:
+      - apiserver
+      - redis
+    environment:
+      CLEARML_API_HOST: http://192.168.56.10:8008
+      CLEARML_WEB_HOST: http://192.168.56.10:80
+      CLEARML_FILES_HOST: http://192.168.56.10:8081
+      CLEARML_API_ACCESS_KEY: ${CLEARML_AGENT_ACCESS_KEY}
+      CLEARML_API_SECRET_KEY: ${CLEARML_AGENT_SECRET_KEY}
+      CLEARML_REDIS_HOST: redis
+      CLEARML_REDIS_PORT: 6379
+      CLEARML_SERVING_PORT: 8086
+      CLEARML_DEFAULT_BASE_SERVE_URL: http://192.168.56.10:8086/serve
+      CLEARML_DEFAULT_TRITON_GRPC_ADDR: 192.168.56.10:8001
+      CLEARML_SERVING_TASK_ID: e5b3837189ef4a83995ff7d3c70ce4ca
+      CLEARML_EXTRA_PYTHON_PACKAGES: "uvicorn[standard] fastapi nltk==3.9.1 polars>=1.31.0,<2"
+      CLEARML_USE_GUNICORN: 1
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./clearml_config:/root/.clearml
+
 networks:
   frontend:
     driver: bridge
